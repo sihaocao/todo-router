@@ -1,26 +1,44 @@
-# Express Boilerplate!
+Live coding practice interview question
+=======================================
 
-This is a boilerplate project used for starting new projects!
+## Overview
 
-## Set up
+This is a FullStack Todo Application, the client is based on [Todo MVC](http://todomvc.com/)
 
-Complete the following steps to start a new project (NEW-PROJECT-NAME):
+- Stack:
+  - Client: Basic jQuery selectors, event-handlers, DOM manipulation and AJAX
+  - Web Server: Node and Express with PostgreSQL 
+  - Database: Locally hosted PostgreSQL 
+  - Tests: Supertest, Chai
 
-1. Clone this repository to your local machine `git clone BOILERPLATE-URL NEW-PROJECTS-NAME`
-2. `cd` into the cloned repository
-3. Make a fresh start of the git history for this project with `rm -rf .git && git init`
-4. Install the node dependencies `npm install`
-5. Move the example Environment file to `.env` that will be ignored by git and read by the express server `mv example.env .env`
-6. Edit the contents of the `package.json` to use NEW-PROJECT-NAME instead of `"name": "express-boilerplate",`
+## The Rules
 
-## Scripts
+As in previous interviews, you may consult official docs and reference-style resources during this coding challenge. You are encouraged to work through as much of it on your own as you can.
 
-Start the application `npm start`
+## Setup
+- Clone this repository to your local machine
+- Install the dependencies for the project
+- Ensure your PostgreSQL server is running
+- Create a User for this exercise
+- Create a database for the exercise with your user as the owner
+- Rename the `example.env` file to `.env` and update the following fields with your database credentials:
+  ```
+   MIGRATION_DB_NAME=
+   MIGRATION_DB_USER=
+   MIGRATION_DB_PASS=
+   DB_URL="postgresql://USERNAME@localhost/DATABASE_NAME"
+  ```
+- Run the command `npm run migrate -- 1` to create the database tables
+- run the command `npm t`
+- You should see output from 10 integration tests, all will be passing.
 
-Start nodemon for the application `npm run dev`
+## Exercise
 
-Run the tests `npm test`
+- Todo Router
+  - Create a new file name `todo-router.js` in the *todo* directory
+  - Move all the endpoints from `app.js` to `todo-router.js`
+  - Require the proper modules into todo-router.js and export the router
+  - In app.js, mount the router on /v1/todos/ path (aka mount point)
+  - Remember to update the paths on the router files.
 
-## Deploying
-
-When your new project is ready for deployment, add a new Heroku application with `heroku create`. This will make a new git remote called "heroku" and you can then `npm run deploy` which will push to this remote's master branch.
+You have completed the task when all the unit tests pass and the client application works without any errors.
