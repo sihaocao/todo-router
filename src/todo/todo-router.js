@@ -1,19 +1,19 @@
-const express = require('express');
-const TodoService = require('./todo-service')
-const xss = require('xss')
-const jsonParser = express.json()
 const path = require('path')
+const express = require('express')
+const xss = require('xss')
+const TodoService = require('./todo-service')
 
-  const serializeTodo = todo => ({
+const todoRouter = express.Router()
+const jsonParser = express.json()
+
+const serializeTodo = todo => ({
     id: todo.id,
     title: xss(todo.title),
     completed: todo.completed
-  })
-  
-  // NOTE the router should go into its own file and do
-  // module.exports = usersRouter;
-  const todoRouter = express.Router();
-  todoRouter.route('/')
+})
+
+todoRouter
+    .route('/')
     .get((req, res, next) => {
         const knexInstance = req.app.get('db')
         TodoService.getTodos(knexInstance)
@@ -32,7 +32,7 @@ const path = require('path')
                     error: { message: `Missing '${key}' in request body` }
                 })
 
-        newTodo.completed = completed;
+        newTodo.completed = completed;  
 
         TodoService.insertTodo(
             req.app.get('db'),
@@ -47,7 +47,8 @@ const path = require('path')
             .catch(next)
     })
 
-  todoRouter.route('/:todo_id')
+todoRouter
+    .route('/:todo_id')
     .all((req, res, next) => {
         if(isNaN(parseInt(req.params.todo_id))) {
             return res.status(404).json({
@@ -79,8 +80,8 @@ const path = require('path')
         )
             .then(numRowsAffected => {
                 res.status(204).end()
-        })
-        .catch(next)
+            })
+            .catch(next)
     })
     .patch(jsonParser, (req, res, next) => {
         const { title, completed } = req.body
@@ -88,21 +89,21 @@ const path = require('path')
 
         const numberOfValues = Object.values(todoToUpdate).filter(Boolean).length
         if (numberOfValues === 0)
-        return res.status(400).json({
-            error: {
-            message: `Request body must content either 'title' or 'completed'`
-            }
-        })
+            return res.status(400).json({
+                error: {
+                    message: `Request body must content either 'title' or 'completed'`
+                }
+            })
 
         TodoService.updateTodo(
             req.app.get('db'),
             req.params.todo_id,
             todoToUpdate
         )
-        .then(updatedTodo => {
-            res.status(200).json(serializeTodo(updatedTodo[0]))
-        })
-        .catch(next)
+            .then(updatedTodo => {
+                res.status(200).json(serializeTodo(updatedTodo[0]))
+            })
+            .catch(next)
     })
-  
-  module.exports = todoRouter
+
+module.exports = todoRouter

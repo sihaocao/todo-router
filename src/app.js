@@ -1,13 +1,11 @@
 require('dotenv').config()
-const express = require('express')
-const morgan = require('morgan')
-const cors = require('cors')
-const helmet = require('helmet')
-const { NODE_ENV } = require('./config')
-const errorHandler = require('./middleware/error-handler')
-
-
-const todoRouter = require('./todo/todo-router')
+const express = require('express');
+const morgan = require('morgan');
+const cors = require('cors');
+const helmet = require('helmet');
+const { NODE_ENV } = require('./config');
+const errorHandler = require('./middleware/error-handler');
+const todoRouter = require('./todo/todo-router');
 
 const app = express()
 
@@ -23,10 +21,7 @@ app.use(helmet())
 
 app.use(express.static('public'))
 
-
-app.use('/v1/todos/', todoRouter)
-
-
+app.use('/v1/todos', todoRouter)
 app.use(errorHandler)
 
 module.exports = app
